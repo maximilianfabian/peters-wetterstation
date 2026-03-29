@@ -123,7 +123,15 @@
         }
         .ai-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;animation:pulse 2s ease-in-out infinite}
         @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.6)}}
-        .last-update{font-size:10px;color:var(--text3)}
+        .live-clock{font-size:28px;font-weight:200;color:#fff;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+        .live-clock .secs{font-size:14px;color:var(--text3);font-weight:400}
+        .live-date{font-size:10px;color:var(--text2);margin-top:1px;text-align:right}
+        .scan-info{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+        .scan-badge{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3)}
+        .scan-badge .scan-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(129,199,132,0.5);animation:scan-pulse 3s ease-in-out infinite}
+        .scan-badge.stale .scan-dot{background:var(--warm);box-shadow:0 0 6px rgba(255,183,77,0.5)}
+        @keyframes scan-pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+        .scan-ago{font-size:10px;color:var(--text3);font-variant-numeric:tabular-nums}
         .refresh-btn{
             width:32px;height:32px;border-radius:8px;
             background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
@@ -379,7 +387,14 @@
             </div>
             <div class="header-right">
                 <div class="ai-badge"><span class="ai-dot"></span>KI-Vorhersage</div>
-                <span class="last-update" id="upd">--:--</span>
+                <div style="text-align:right">
+                    <div class="live-clock" id="liveClock">--:--<span class="secs">:--</span></div>
+                    <div class="live-date" id="liveDate">--</div>
+                </div>
+                <div class="scan-info">
+                    <div class="scan-badge" id="scanBadge"><span class="scan-dot"></span><span id="scanLabel">Letzter Scan: --:--</span></div>
+                    <div class="scan-ago" id="scanAgo">--</div>
+                </div>
                 <button class="refresh-btn" id="refBtn" title="Aktualisieren">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                 </button>
@@ -801,7 +816,7 @@ function renderCurrent(data){
         document.getElementById('sVis').textContent=`${Math.round(data.hourly.visibility[h]/1000)} km`;
         document.getElementById('sUV').textContent=data.hourly.uv_index[h].toFixed(1);
     }
-    document.getElementById('upd').textContent=now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    lastScanTime=now;
 
     document.getElementById('greetMsg').innerHTML=`${greet()}, <strong>Peter</strong>`;
     let sum=`${w.desc} bei ${Math.round(c.temperature_2m)}°C.`;
@@ -1000,6 +1015,32 @@ async function addCity(){const i=document.getElementById('gSearch'),q=i.value.tr
 // INIT
 const fx=new WeatherFX();
 const starField=new StarField();
+let lastScanTime=null;
+
+// Live clock + scan tracker — updates every second
+const DAYS_FULL=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+const MONTHS=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+function tickClock(){
+    const now=new Date();
+    const h=String(now.getHours()).padStart(2,'0');
+    const m=String(now.getMinutes()).padStart(2,'0');
+    const s=String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('liveClock').innerHTML=`${h}:${m}<span class="secs">:${s}</span>`;
+    document.getElementById('liveDate').textContent=`${DAYS_FULL[now.getDay()]}, ${now.getDate()}. ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+
+    if(lastScanTime){
+        const ago=Math.floor((now-lastScanTime)/1000);
+        const scanLabel=document.getElementById('scanLabel');
+        const scanAgo=document.getElementById('scanAgo');
+        const scanBadge=document.getElementById('scanBadge');
+        scanLabel.textContent=`Letzter Scan: ${lastScanTime.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
+        if(ago<60){scanAgo.textContent=`vor ${ago}s`;scanBadge.className='scan-badge'}
+        else if(ago<3600){scanAgo.textContent=`vor ${Math.floor(ago/60)}min`;scanBadge.className='scan-badge'+(ago>600?' stale':'')}
+        else{scanAgo.textContent=`vor ${Math.floor(ago/3600)}h`;scanBadge.className='scan-badge stale'}
+    }
+}
+setInterval(tickClock,1000);
+tickClock();
 
 async function loadAll(){
     document.getElementById('refBtn').classList.add('spin');
