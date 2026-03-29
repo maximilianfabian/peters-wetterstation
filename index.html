@@ -343,17 +343,54 @@
         .gc:hover .rm{display:flex}
         .gc .rm:hover{background:rgba(239,83,80,0.15);color:var(--red)}
 
+        /* Garden sensor card */
+        .c-garden{grid-column:1/4;padding:24px;position:relative}
+        .c-garden .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+        .c-garden .hd h3{font-size:15px;font-weight:600}
+        .garden-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:4px 10px;border-radius:16px}
+        .garden-status.live{background:rgba(129,199,132,0.1);color:var(--green);border:1px solid rgba(129,199,132,0.15)}
+        .garden-status.offline{background:rgba(255,183,77,0.1);color:var(--warm);border:1px solid rgba(255,183,77,0.15)}
+        .garden-status.setup{background:rgba(126,200,227,0.1);color:var(--accent);border:1px solid rgba(126,200,227,0.15)}
+        .garden-status .gdot{width:5px;height:5px;border-radius:50%;animation:pulse 2s ease-in-out infinite}
+        .garden-status.live .gdot{background:var(--green)}
+        .garden-status.offline .gdot{background:var(--warm)}
+        .garden-status.setup .gdot{background:var(--accent)}
+        .garden-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+        .garden-sensor{padding:16px;background:rgba(255,255,255,0.03);border-radius:14px;border:1px solid rgba(255,255,255,0.04);text-align:center;transition:all 0.3s}
+        .garden-sensor:hover{background:rgba(255,255,255,0.06)}
+        .gs-icon{font-size:28px;margin-bottom:8px}
+        .gs-val{font-size:24px;font-weight:700;color:#fff;margin-bottom:3px}
+        .gs-label{font-size:11px;color:var(--text2)}
+        .gs-compare{font-size:10px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.04);color:var(--text3)}
+        .gs-compare .diff{font-weight:600}
+        .gs-compare .diff.warmer{color:var(--warm)}
+        .gs-compare .diff.cooler{color:var(--accent)}
+        .gs-compare .diff.match{color:var(--green)}
+        .garden-setup{padding:24px;text-align:center}
+        .garden-setup p{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6}
+        .garden-setup .steps{text-align:left;font-size:12px;color:var(--text2);line-height:2;margin-bottom:16px;padding-left:20px}
+        .garden-setup .steps li strong{color:#fff}
+        .wu-input-row{display:flex;gap:8px;justify-content:center;max-width:400px;margin:0 auto}
+        .wu-input{flex:1;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#fff;font-size:13px;font-family:inherit;outline:none;transition:all 0.3s}
+        .wu-input:focus{border-color:rgba(126,200,227,0.3);box-shadow:0 0 0 3px rgba(126,200,227,0.06)}
+        .wu-input::placeholder{color:var(--text3)}
+        .wu-save{padding:10px 20px;background:rgba(126,200,227,0.15);border:1px solid rgba(126,200,227,0.25);border-radius:10px;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.3s}
+        .wu-save:hover{background:rgba(126,200,227,0.25)}
+        .wu-edit-btn{position:absolute;top:22px;right:22px;padding:5px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:var(--text3);font-size:10px;cursor:pointer;font-family:inherit;transition:all 0.3s}
+        .wu-edit-btn:hover{background:rgba(255,255,255,0.08);color:var(--text2)}
+        @media(max-width:640px){.garden-grid{grid-template-columns:repeat(2,1fr)}}
+
         /* Responsive */
         @media(max-width:1024px){
             .grid{grid-template-columns:1fr 1fr}
-            .c-current,.c-rain,.c-hourly{grid-column:1/3}
+            .c-current,.c-rain,.c-hourly,.c-garden{grid-column:1/3}
             .c-week,.c-tg{grid-column:1/3}
             .g-grid{grid-template-columns:repeat(2,1fr)}
         }
         @media(max-width:640px){
             .dashboard{padding:10px}
             .grid{grid-template-columns:1fr;gap:10px}
-            .c-current,.c-rain,.c-hourly,.c-week,.c-tg,.c-air,.c-pressure,.c-sun,.c-wind{grid-column:1}
+            .c-current,.c-rain,.c-hourly,.c-week,.c-tg,.c-air,.c-pressure,.c-sun,.c-wind,.c-garden{grid-column:1}
             .c-current{flex-direction:column;text-align:center}
             .c-details{justify-content:center}
             .c-temp{font-size:72px}
@@ -441,6 +478,33 @@
                     <div class="si"><div class="si-l"><div class="ic">👁</div>Sicht</div><div class="si-v" id="sVis">--</div></div>
                     <div class="si"><div class="si-l"><div class="ic">☁</div>Wolken</div><div class="si-v" id="sCloud">--</div></div>
                     <div class="si"><div class="si-l"><div class="ic">☀</div>UV-Index</div><div class="si-v" id="sUV">--</div></div>
+                </div>
+
+                <!-- Garden Sensors (Vevor YT60234) -->
+                <div class="c-garden glass" id="gardenCard">
+                    <div class="hd">
+                        <h3>🌱 Garten-Sensoren · Vevor Station</h3>
+                        <div class="garden-status setup" id="gardenStatus"><span class="gdot"></span><span id="gardenStatusTxt">Einrichten</span></div>
+                    </div>
+                    <button class="wu-edit-btn" id="wuEditBtn" style="display:none">Station-ID ändern</button>
+                    <div id="gardenContent">
+                        <div class="garden-setup" id="gardenSetup">
+                            <p>Verbinde deine Vevor Wetterstation, um Live-Daten aus dem Garten zu sehen — Temperatur, Wind, Regen, UV und mehr direkt von deinem Sensor.</p>
+                            <ol class="steps">
+                                <li>Gehe auf <strong>wunderground.com</strong> und erstelle ein kostenloses Konto</li>
+                                <li>Klicke auf <strong>"Meine Wetterstationen"</strong> und registriere eine neue Station</li>
+                                <li>Du erhältst eine <strong>Station-ID</strong> (z.B. IWEDEMA1) und einen <strong>API-Key</strong></li>
+                                <li>Trage die Station-ID in deiner Vevor Station ein (SET-Taste)</li>
+                                <li>Gib die Station-ID und den API-Key hier unten ein:</li>
+                            </ol>
+                            <div class="wu-input-row">
+                                <input type="text" class="wu-input" id="wuStationInput" placeholder="Station-ID (z.B. IWEDEMA1)">
+                                <input type="text" class="wu-input" id="wuKeyInput" placeholder="API-Key">
+                                <button class="wu-save" id="wuSaveBtn">Verbinden</button>
+                            </div>
+                        </div>
+                        <div class="garden-grid" id="gardenGrid" style="display:none"></div>
+                    </div>
                 </div>
 
                 <div class="c-rain glass">
@@ -996,6 +1060,123 @@ function renderTempGraph(data){
     ctx.beginPath();ctx.arc(cx2,cy,9,0,Math.PI*2);ctx.strokeStyle='rgba(126,200,227,0.25)';ctx.lineWidth=2;ctx.stroke();
 }
 
+// ═══════════════════════════════════════
+// GARDEN SENSORS (Vevor via Weather Underground)
+// ═══════════════════════════════════════
+
+let gardenData=null;
+
+function getWUConfig(){
+    const id=localStorage.getItem('pw_wu_station');
+    const key=localStorage.getItem('pw_wu_key');
+    return(id&&key)?{id,key}:null;
+}
+
+async function fetchGarden(){
+    const cfg=getWUConfig();
+    if(!cfg)return null;
+    try{
+        const url=`https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(cfg.id)}&format=json&units=m&apiKey=${encodeURIComponent(cfg.key)}`;
+        const r=await fetch(url);
+        if(!r.ok)throw new Error('WU API '+r.status);
+        const d=await r.json();
+        if(d.observations&&d.observations.length)return d.observations[0];
+        return null;
+    }catch(e){console.error('Garten-Fehler:',e);return null}
+}
+
+function renderGarden(obs,forecastData){
+    const setup=document.getElementById('gardenSetup');
+    const grid=document.getElementById('gardenGrid');
+    const status=document.getElementById('gardenStatus');
+    const stxt=document.getElementById('gardenStatusTxt');
+    const editBtn=document.getElementById('wuEditBtn');
+
+    if(!getWUConfig()){
+        setup.style.display='';grid.style.display='none';
+        status.className='garden-status setup';stxt.textContent='Einrichten';
+        editBtn.style.display='none';
+        return;
+    }
+
+    editBtn.style.display='';
+
+    if(!obs){
+        setup.style.display='none';grid.style.display='none';
+        status.className='garden-status offline';stxt.textContent='Keine Daten';
+        return;
+    }
+
+    setup.style.display='none';grid.style.display='';
+    status.className='garden-status live';stxt.textContent='Live';
+
+    const m=obs.metric||obs.metric_si||{};
+    const fc=forecastData?.current;
+
+    // Build comparison helper
+    function cmp(gardenVal,forecastVal,unit,label){
+        if(forecastVal==null||gardenVal==null)return'';
+        const diff=gardenVal-forecastVal;
+        const abs=Math.abs(diff).toFixed(1);
+        if(Math.abs(diff)<0.5)return`<div class="gs-compare">Vorhersage: <span class="diff match">passt</span></div>`;
+        const dir=diff>0?(label==='temp'?'warmer':'höher'):(label==='temp'?'kühler':'niedriger');
+        const cls=diff>0?'warmer':'cooler';
+        return`<div class="gs-compare">vs. Vorhersage: <span class="diff ${cls}">${diff>0?'+':''}${abs}${unit}</span></div>`;
+    }
+
+    const sensors=[
+        {icon:'🌡️',val:m.temp!=null?m.temp.toFixed(1)+'°C':'--',label:'Temperatur',cmp:cmp(m.temp,fc?.temperature_2m,'°','temp')},
+        {icon:'💧',val:m.humidity!=null?m.humidity+'%':'--',label:'Feuchtigkeit',cmp:cmp(obs.humidity,fc?.relative_humidity_2m,'%','hum')},
+        {icon:'💨',val:m.windSpeed!=null?Math.round(m.windSpeed)+' km/h':'--',label:'Wind',cmp:cmp(m.windSpeed,fc?.wind_speed_10m,' km/h','wind')},
+        {icon:'🌬️',val:m.windGust!=null?Math.round(m.windGust)+' km/h':'--',label:'Böen',cmp:''},
+        {icon:'🧭',val:obs.winddir!=null?wd(obs.winddir)+' '+obs.winddir+'°':'--',label:'Windrichtung',cmp:''},
+        {icon:'🌧️',val:m.precipRate!=null?m.precipRate.toFixed(1)+' mm/h':'--',label:'Regen aktuell',cmp:''},
+        {icon:'☔',val:m.precipTotal!=null?m.precipTotal.toFixed(1)+' mm':'--',label:'Regen heute',cmp:''},
+        {icon:'📊',val:m.pressure!=null?Math.round(m.pressure)+' hPa':'--',label:'Luftdruck',cmp:cmp(m.pressure,fc?.pressure_msl,' hPa','press')},
+        {icon:'☀️',val:obs.uv!=null?obs.uv.toFixed(1):'--',label:'UV-Index',cmp:''},
+        {icon:'🔆',val:m.solarRadiation!=null?Math.round(m.solarRadiation)+' W/m²':'--',label:'Sonnenstrahlung',cmp:''},
+        {icon:'🌡️',val:m.dewpt!=null?m.dewpt.toFixed(1)+'°C':'--',label:'Taupunkt',cmp:''},
+        {icon:'🔋',val:obs.epoch?new Date(obs.epoch*1000).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'--',label:'Letztes Update',cmp:''},
+    ];
+
+    grid.innerHTML=sensors.map(s=>`
+        <div class="garden-sensor">
+            <div class="gs-icon">${s.icon}</div>
+            <div class="gs-val">${s.val}</div>
+            <div class="gs-label">${s.label}</div>
+            ${s.cmp}
+        </div>
+    `).join('');
+}
+
+// WU Setup handlers
+document.getElementById('wuSaveBtn').addEventListener('click',()=>{
+    const id=document.getElementById('wuStationInput').value.trim();
+    const key=document.getElementById('wuKeyInput').value.trim();
+    if(!id||!key){alert('Bitte Station-ID und API-Key eingeben.');return}
+    localStorage.setItem('pw_wu_station',id);
+    localStorage.setItem('pw_wu_key',key);
+    loadGarden();
+});
+
+document.getElementById('wuEditBtn').addEventListener('click',()=>{
+    const setup=document.getElementById('gardenSetup');
+    const grid=document.getElementById('gardenGrid');
+    const cfg=getWUConfig();
+    if(cfg){
+        document.getElementById('wuStationInput').value=cfg.id;
+        document.getElementById('wuKeyInput').value=cfg.key;
+    }
+    setup.style.display='';grid.style.display='none';
+});
+
+let lastForecastData=null;
+async function loadGarden(){
+    const obs=await fetchGarden();
+    gardenData=obs;
+    renderGarden(obs,lastForecastData);
+}
+
 // GLOBAL
 let gCities=JSON.parse(localStorage.getItem('pw_cities')||'null')||DEFCITIES;
 
@@ -1046,9 +1227,11 @@ async function loadAll(){
     document.getElementById('refBtn').classList.add('spin');
     try{
         const[data,air]=await Promise.all([fetchLocal(),fetchAirQuality()]);
+        lastForecastData=data;
         renderCurrent(data);renderRain(data);renderHourly(data);renderWeekly(data);
         renderSun(data);renderWind(data);renderTempGraph(data);renderPressure(data);
         renderAir(air);
+        loadGarden();
     }catch(e){console.error(e)}
     document.getElementById('refBtn').classList.remove('spin');
 }
