@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  /* Warm, calm background and strong, readable text by default. */
+  background-color: theme("colors.cream");
+  color: theme("colors.ink");
+  /* A friendly, highly legible system font stack — no extra downloads needed. */
+  font-family: ui-rounded, "Segoe UI", system-ui, -apple-system, "Helvetica Neue",
+    Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Respect people who have asked their device to reduce motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* A clear, visible outline when navigating by keyboard. */
+:focus-visible {
+  outline: 3px solid theme("colors.brand.DEFAULT");
+  outline-offset: 2px;
+}
