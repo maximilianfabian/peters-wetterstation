@@ -12,12 +12,9 @@ body {
 }
 
 body {
-  /* Warm, calm background and strong, readable text by default. */
   background-color: theme("colors.cream");
   color: theme("colors.ink");
-  /* A friendly, highly legible system font stack — no extra downloads needed. */
-  font-family: ui-rounded, "Segoe UI", system-ui, -apple-system, "Helvetica Neue",
-    Arial, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }

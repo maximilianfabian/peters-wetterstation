@@ -1,5 +1,21 @@
 import type { Metadata, Viewport } from "next";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+
+// Display serif for the big greeting; clean sans for everything else.
+// next/font loads them with no layout shift and keeps them server-side.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-serif",
+  display: "swap",
+});
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Biscuit — your patient companion",
@@ -10,9 +26,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  // Let people zoom in if they want to — never block that.
-  maximumScale: 5,
-  themeColor: "#FAF6EF",
+  maximumScale: 5, // let people zoom in — never block it
+  themeColor: "#FAF4E8",
 };
 
 export default function RootLayout({
@@ -21,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body>{children}</body>
     </html>
   );
