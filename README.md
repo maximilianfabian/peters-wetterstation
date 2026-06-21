@@ -67,13 +67,15 @@ watching real people use Biscuit. Don't weaken the safety rules.
 
 | Path | What it does |
 |---|---|
-| `app/page.tsx` | The single screen (renders the chat). |
-| `components/ChatScreen.tsx` | The chat screen logic and layout. |
-| `components/PromptChips.tsx` | The tappable suggested-prompt chips. |
+| `app/page.tsx` | Renders the app (home screen + conversation). |
+| `components/BiscuitApp.tsx` | Switches between the home screen and the chat. |
+| `components/HomeScreen.tsx` | Welcome screen: round button + big action buttons. |
+| `components/Conversation.tsx` | The chat screen (messages, suggestions, message box). |
+| `components/MessageBubble.tsx` | One message; "Read aloud" sits under Biscuit's replies. |
 | `components/ReadAloudButton.tsx` | "Read aloud" using the browser's voice. |
 | `app/api/chat/route.ts` | Server-only route that talks to the LLM. |
 | `lib/system-prompt.ts` | Biscuit's instructions and safety rules. |
-| `lib/suggested-prompts.ts` | The four starter chips. |
+| `lib/suggested-prompts.ts` | The quick-tap suggestions shown in a chat. |
 | `lib/rate-limit.ts` | A simple server-side usage guard. |
 
 ## Switching the AI provider later

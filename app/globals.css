@@ -17,6 +17,8 @@ body {
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Never allow sideways scrolling — keeps all content on-screen for everyone. */
+  overflow-x: hidden;
 }
 
 /* Respect people who have asked their device to reduce motion. */
