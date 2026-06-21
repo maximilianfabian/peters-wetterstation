@@ -29,9 +29,11 @@ function Face() {
 
 export function HomeScreen({
   greeting,
+  name,
   onStart,
 }: {
   greeting: string;
+  name: string;
   onStart: (prompt?: string) => void;
 }) {
   return (
@@ -42,7 +44,7 @@ export function HomeScreen({
           {greeting},
         </p>
         <p className="font-serif text-[40px] font-bold leading-tight text-brand-dark">
-          I&apos;m here 👋
+          {name ? `${name} 👋` : "I’m here 👋"}
         </p>
       </div>
 

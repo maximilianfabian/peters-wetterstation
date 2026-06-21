@@ -5,7 +5,8 @@ technology. Text-first, mobile-first, built so the user **never faces a blank
 box** — they tap suggested prompts, read big text, and can have replies read
 aloud.
 
-See [`PROJECT-BRIEF.md`](./PROJECT-BRIEF.md) for the full product vision and
+See [`PROJECT-BRIEF.md`](./PROJECT-BRIEF.md) for the full product vision,
+[`DESIGN.md`](./DESIGN.md) for the senior-friendly design principles, and
 [`CLAUDE.md`](./CLAUDE.md) for working conventions.
 
 ---
@@ -68,7 +69,8 @@ watching real people use Biscuit. Don't weaken the safety rules.
 | Path | What it does |
 |---|---|
 | `app/page.tsx` | Renders the app (home screen + conversation). |
-| `components/BiscuitApp.tsx` | Switches between the home screen and the chat. |
+| `components/BiscuitApp.tsx` | Switches between the name step, home screen, and chat. |
+| `components/NameScreen.tsx` | One-time, skippable "What may I call you?" (saved on-device). |
 | `components/HomeScreen.tsx` | Welcome screen: round button + big action buttons. |
 | `components/Conversation.tsx` | The chat screen (messages, suggestions, message box). |
 | `components/MessageBubble.tsx` | One message; "Read aloud" sits under Biscuit's replies. |
