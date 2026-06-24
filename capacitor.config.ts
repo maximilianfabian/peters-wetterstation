@@ -14,7 +14,7 @@ const config: CapacitorConfig = {
   // (com.intomembers.app / com.intomembers.app.staging). It is still registered
   // under the same Apple team (72JBWD8T65), which is safe and additive.
   // Confirm this exact string with the account owner before registering the App ID.
-  appId: "io.vemax.biscuit",
+  appId: "app.biscuit",
   appName: "Biscuit",
 
   // Required by Capacitor. We don't ship the site inside the app, so this just

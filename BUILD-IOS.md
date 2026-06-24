@@ -19,7 +19,7 @@ working exactly as on the web. Only the **build + upload** must happen on a Mac.
 Biscuit shares **only** the Apple Developer team with the separate,
 business-critical **INTO Members** app. Keep them 100% isolated:
 
-1. **Own bundle ID.** Biscuit uses `io.vemax.biscuit`. It must **never** be, or
+1. **Own bundle ID.** Biscuit uses `app.biscuit`. It must **never** be, or
    sit under, INTO's namespace: `com.intomembers.app` (prod) or
    `com.intomembers.app.staging` (staging).
 2. **No EAS / Expo, ever.** Do not create or run `eas.json`, `app.config.ts`,
@@ -53,9 +53,12 @@ business-critical **INTO Members** app. Keep them 100% isolated:
 
 ## One-time setup
 
-1. **Point the app at your live site.** Open `capacitor.config.ts` and:
-   - set `server.url` to your deployed URL (your Vercel link), and
-   - set `appId` to your bundle identifier (e.g. `com.yourcompany.biscuit`).
+1. **Point the app at your live site.** Open `capacitor.config.ts` and set
+   `server.url` to your deployed URL (your Vercel link). The `appId` is already
+   set to **`app.biscuit`** — you only need to change it if Apple reports that ID
+   is already taken (bundle IDs are globally unique across all developers). If so,
+   pick something more specific like `app.biscuit.companion` and update it here
+   and in the App Store Connect record.
 
 2. On the Mac, in the project folder:
    ```bash
@@ -71,13 +74,13 @@ business-critical **INTO Members** app. Keep them 100% isolated:
      **new** provisioning profile for Biscuit's bundle ID. **Never** revoke,
      reset, or regenerate any existing certificate/profile (those are shared with
      INTO — see "Isolation" above). If Xcode offers to "Reset" or "Revoke", STOP.
-   - **Bundle Identifier**: `io.vemax.biscuit` (matches `appId` in
+   - **Bundle Identifier**: `app.biscuit` (matches `appId` in
      `capacitor.config.ts` and the App Store Connect record below).
 
 4. **In App Store Connect** (appstoreconnect.apple.com → Apps → "+"), signed in
    as `vedat@vemax.io`:
    - First register a **new, explicit** App ID at developer.apple.com →
-     Identifiers (`io.vemax.biscuit`, team 72JBWD8T65). Not a wildcard.
+     Identifiers (`app.biscuit`, team 72JBWD8T65). Not a wildcard.
    - Then create a **brand-new app record** with that **same bundle ID**, name
      "Biscuit", platform iOS, and its own unique SKU. Do **not** modify or reuse
      INTO's existing records.
