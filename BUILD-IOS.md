@@ -8,6 +8,12 @@ working exactly as on the web. Only the **build + upload** must happen on a Mac.
 > Plain version: we make a tiny iPhone "app" that opens your Biscuit website
 > inside it, then send that to Apple's TestFlight so testers can install it.
 
+> **Note on EAS / Expo:** the org's other apps build with Expo + `eas build` /
+> `eas submit`. That pipeline is for React Native apps and does **not** apply
+> here — Biscuit is a web app wrapped with Capacitor, so we build with **Xcode
+> Archive** instead of EAS. We still use the same Apple account for signing.
+> Apple account: `vedat@vemax.io`, team **72JBWD8T65**.
+
 ---
 
 ## What you need first
@@ -37,12 +43,16 @@ working exactly as on the web. Only the **build + upload** must happen on a Mac.
    ```
 
 3. **In Xcode** (the App target → "Signing & Capabilities"):
-   - **Team**: choose the Vedat Ulgen Apple Developer team.
-   - **Bundle Identifier**: must match `appId` above and the App Store Connect
-     app record (next step).
+   - **Team**: choose the Vedat Ulgen team (**72JBWD8T65**).
+   - **Bundle Identifier**: `com.intomembers.biscuit` (matches `appId` in
+     `capacitor.config.ts` and the App Store Connect record below).
 
-4. **In App Store Connect** (appstoreconnect.apple.com → Apps → "+"):
-   - Create a new app with the **same bundle ID**, name "Biscuit", platform iOS.
+4. **In App Store Connect** (appstoreconnect.apple.com → Apps → "+"), signed in
+   as `vedat@vemax.io`:
+   - First register the bundle ID at developer.apple.com → Identifiers (App ID
+     `com.intomembers.biscuit`, team 72JBWD8T65).
+   - Then create a new app with that **same bundle ID**, name "Biscuit",
+     platform iOS, and an SKU.
 
 ---
 
