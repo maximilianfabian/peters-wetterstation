@@ -9,10 +9,12 @@ import type { CapacitorConfig } from "@capacitor/cli";
  * upload happen on a Mac. See BUILD-IOS.md for the full walkthrough.
  */
 const config: CapacitorConfig = {
-  // Bundle identifier registered under the Vedat Ulgen Apple Developer account
-  // (team 72JBWD8T65), following the com.intomembers.<app> convention.
-  // Change the suffix if you prefer; it must match the App Store Connect record.
-  appId: "com.intomembers.biscuit",
+  // Biscuit's OWN bundle identifier — deliberately NOT under the com.intomembers.*
+  // namespace, so it can never collide with the separate INTO Members app
+  // (com.intomembers.app / com.intomembers.app.staging). It is still registered
+  // under the same Apple team (72JBWD8T65), which is safe and additive.
+  // Confirm this exact string with the account owner before registering the App ID.
+  appId: "io.vemax.biscuit",
   appName: "Biscuit",
 
   // Required by Capacitor. We don't ship the site inside the app, so this just

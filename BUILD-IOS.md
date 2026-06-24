@@ -14,6 +14,29 @@ working exactly as on the web. Only the **build + upload** must happen on a Mac.
 > Archive** instead of EAS. We still use the same Apple account for signing.
 > Apple account: `vedat@vemax.io`, team **72JBWD8T65**.
 
+## Isolation from the INTO Members app (read this first)
+
+Biscuit shares **only** the Apple Developer team with the separate,
+business-critical **INTO Members** app. Keep them 100% isolated:
+
+1. **Own bundle ID.** Biscuit uses `io.vemax.biscuit`. It must **never** be, or
+   sit under, INTO's namespace: `com.intomembers.app` (prod) or
+   `com.intomembers.app.staging` (staging).
+2. **No EAS / Expo, ever.** Do not create or run `eas.json`, `app.config.ts`,
+   `eas build`, `eas submit`, or `eas update` — those belong to INTO's project
+   and own its build numbers/OTA channels. Biscuit builds **only** via Xcode.
+3. **Don't disturb shared signing.** Use **automatic** signing and let Xcode
+   create a **new** profile for Biscuit. **Never revoke/reset/regenerate** any
+   existing certificate or profile — INTO's builds depend on them. If prompted to
+   reset/revoke, **stop and ask**.
+4. **New App Store Connect record only.** Create a brand-new app (own SKU, own
+   bundle ID). Never modify or reuse INTO's two records.
+5. **No INTO backend.** Biscuit points only at its own deployed web URL. Never
+   import INTO's Supabase/env/API keys.
+6. **Separate repo.** Everything stays in the Biscuit repo
+   (`maximilianfabian/peters-wetterstation`, renaming to `biscuit`). Never touch
+   the INTO repo (`maximilianfabian/new-into`).
+
 ---
 
 ## What you need first
@@ -44,15 +67,20 @@ working exactly as on the web. Only the **build + upload** must happen on a Mac.
 
 3. **In Xcode** (the App target → "Signing & Capabilities"):
    - **Team**: choose the Vedat Ulgen team (**72JBWD8T65**).
-   - **Bundle Identifier**: `com.intomembers.biscuit` (matches `appId` in
+   - **Signing**: leave **Automatically manage signing** ON. Let Xcode create a
+     **new** provisioning profile for Biscuit's bundle ID. **Never** revoke,
+     reset, or regenerate any existing certificate/profile (those are shared with
+     INTO — see "Isolation" above). If Xcode offers to "Reset" or "Revoke", STOP.
+   - **Bundle Identifier**: `io.vemax.biscuit` (matches `appId` in
      `capacitor.config.ts` and the App Store Connect record below).
 
 4. **In App Store Connect** (appstoreconnect.apple.com → Apps → "+"), signed in
    as `vedat@vemax.io`:
-   - First register the bundle ID at developer.apple.com → Identifiers (App ID
-     `com.intomembers.biscuit`, team 72JBWD8T65).
-   - Then create a new app with that **same bundle ID**, name "Biscuit",
-     platform iOS, and an SKU.
+   - First register a **new, explicit** App ID at developer.apple.com →
+     Identifiers (`io.vemax.biscuit`, team 72JBWD8T65). Not a wildcard.
+   - Then create a **brand-new app record** with that **same bundle ID**, name
+     "Biscuit", platform iOS, and its own unique SKU. Do **not** modify or reuse
+     INTO's existing records.
 
 ---
 
