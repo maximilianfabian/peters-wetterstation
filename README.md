@@ -58,6 +58,13 @@ in your web browser and you'll see Biscuit. Tap a suggested prompt to begin.
 3. Under **Environment Variables**, add `ANTHROPIC_API_KEY` with your real key.
 4. Click **Deploy**. Vercel gives you a public link you can open on any phone.
 
+## Put it on an iPhone / TestFlight
+
+Biscuit can be wrapped as a native iOS app (Capacitor) and shipped via
+TestFlight. The shell just opens your deployed site, so everything keeps
+working. Full step-by-step in [`BUILD-IOS.md`](./BUILD-IOS.md). The build itself
+must run on a Mac with Xcode (or a cloud Mac build service).
+
 ## The most important file
 
 [`lib/system-prompt.ts`](./lib/system-prompt.ts) defines how Biscuit speaks and the

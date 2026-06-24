@@ -29,3 +29,11 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# capacitor / ios native build (the ios/ project is generated on a Mac)
+/ios/App/Pods
+/ios/App/App/public
+/ios/App/build
+/ios/DerivedData
+/ios/capacitor-cordova-ios-plugins
+.DS_Store
