@@ -34,8 +34,8 @@ business-critical **INTO Members** app. Keep them 100% isolated:
 5. **No INTO backend.** Biscuit points only at its own deployed web URL. Never
    import INTO's Supabase/env/API keys.
 6. **Separate repo.** Everything stays in the Biscuit repo
-   (`maximilianfabian/peters-wetterstation`, renaming to `biscuit`). Never touch
-   the INTO repo (`maximilianfabian/new-into`).
+   (`maximilianfabian/biscuit`). Never touch the INTO repo
+   (`maximilianfabian/new-into`).
 
 ---
 
