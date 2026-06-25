@@ -32,8 +32,8 @@ const config: CapacitorConfig = {
     // The native app opens this site (UI + the server-side API both work).
     // Set the matching URL via env var, or replace the placeholders below.
     url: isStaging
-      ? process.env.BISCUIT_STAGING_URL ?? "https://YOUR-BISCUIT-STAGING-URL.vercel.app"
-      : process.env.BISCUIT_PROD_URL ?? "https://YOUR-BISCUIT-URL.vercel.app",
+      ? process.env.BISCUIT_STAGING_URL ?? "https://biscuit-puce.vercel.app"
+      : process.env.BISCUIT_PROD_URL ?? "https://biscuit-puce.vercel.app",
     cleartext: false, // only allow secure https
   },
 };
