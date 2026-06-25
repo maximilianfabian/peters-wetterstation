@@ -3,29 +3,37 @@ import type { CapacitorConfig } from "@capacitor/cli";
 /**
  * Capacitor configuration — the thin native iOS shell for Biscuit.
  *
- * Because Biscuit has a SERVER-SIDE API route (so your secret key never reaches
- * the browser), the native app does NOT bundle the website. Instead it loads
- * the deployed Biscuit web app from a URL, and only the build + TestFlight
- * upload happen on a Mac. See BUILD-IOS.md for the full walkthrough.
+ * Biscuit has a SERVER-SIDE API route (so the secret key never reaches the
+ * browser), so the native app does NOT bundle the website — it loads the
+ * deployed Biscuit web app from a URL. Only the build + TestFlight upload happen
+ * on a Mac. See BUILD-IOS.md.
+ *
+ * STAGING vs PRODUCTION — choose at build time with an env var:
+ *   BISCUIT_ENV=staging npm run ios:sync   # staging app
+ *   npm run ios:sync                       # production app (default)
+ *
+ * Staging uses its OWN bundle id (app.biscuit.staging) and its OWN App Store
+ * Connect record, completely separate from production AND from the INTO app.
  */
-const config: CapacitorConfig = {
-  // Biscuit's OWN bundle identifier — deliberately NOT under the com.intomembers.*
-  // namespace, so it can never collide with the separate INTO Members app
-  // (com.intomembers.app / com.intomembers.app.staging). It is still registered
-  // under the same Apple team (72JBWD8T65), which is safe and additive.
-  // Confirm this exact string with the account owner before registering the App ID.
-  appId: "app.biscuit",
-  appName: "Biscuit",
+const isStaging = process.env.BISCUIT_ENV === "staging";
 
-  // Required by Capacitor. We don't ship the site inside the app, so this just
-  // holds a small "loading" page used until the live site is reached.
+const config: CapacitorConfig = {
+  // Biscuit's OWN bundle ids — deliberately NOT under com.intomembers.*, so they
+  // can never collide with the separate INTO Members app. Same Apple team
+  // (72JBWD8T65), which is safe and additive.
+  appId: isStaging ? "app.biscuit.staging" : "app.biscuit",
+  appName: isStaging ? "Biscuit (Staging)" : "Biscuit",
+
+  // Required by Capacitor. We don't ship the site inside the app; this is just a
+  // small "loading" page shown until the live site is reached.
   webDir: "native-fallback",
 
   server: {
-    // TODO: replace with your deployed Biscuit URL (e.g. your Vercel link).
-    // The native app opens this site, so everything (UI + the server-side API)
-    // keeps working exactly as on the web.
-    url: "https://YOUR-BISCUIT-URL.vercel.app",
+    // The native app opens this site (UI + the server-side API both work).
+    // Set the matching URL via env var, or replace the placeholders below.
+    url: isStaging
+      ? process.env.BISCUIT_STAGING_URL ?? "https://YOUR-BISCUIT-STAGING-URL.vercel.app"
+      : process.env.BISCUIT_PROD_URL ?? "https://YOUR-BISCUIT-URL.vercel.app",
     cleartext: false, // only allow secure https
   },
 };

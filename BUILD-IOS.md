@@ -53,19 +53,26 @@ business-critical **INTO Members** app. Keep them 100% isolated:
 
 ## One-time setup
 
-1. **Point the app at your live site.** Open `capacitor.config.ts` and set
-   `server.url` to your deployed URL (your Vercel link). The `appId` is already
-   set to **`app.biscuit`** — you only need to change it if Apple reports that ID
-   is already taken (bundle IDs are globally unique across all developers). If so,
-   pick something more specific like `app.biscuit.companion` and update it here
-   and in the App Store Connect record.
+1. **Choose environment + URL.** Everything is driven by `capacitor.config.ts`:
+   - **Production** (default): bundle id `app.biscuit`, name "Biscuit", loads
+     `BISCUIT_PROD_URL`.
+   - **Staging**: prefix commands with `BISCUIT_ENV=staging` — bundle id
+     `app.biscuit.staging`, name "Biscuit (Staging)", loads `BISCUIT_STAGING_URL`.
 
-2. On the Mac, in the project folder:
+   Provide the matching URL as an env var (shown below) or by editing the
+   placeholder in `capacitor.config.ts`. **You must deploy Biscuit to that URL
+   first** (see README → "Put it online (deploy to Vercel)"). Staging and
+   production should be two separate deployments/URLs.
+
+2. On the Mac, in the project folder. For a **staging** build, prefix the
+   Capacitor commands with the env vars (omit them for production):
    ```bash
    npm install
+   export BISCUIT_ENV=staging
+   export BISCUIT_STAGING_URL=https://your-staging-url   # your deployed staging link
    npm run ios:add      # creates the ios/ Xcode project (Mac only)
-   npm run ios:sync     # copies config + the fallback page in
-   npm run ios:open     # opens the project in Xcode
+   npm run ios:sync     # writes the staging bundle id + URL into the project
+   npm run ios:open     # opens Xcode
    ```
 
 3. **In Xcode** (the App target → "Signing & Capabilities"):
@@ -74,16 +81,19 @@ business-critical **INTO Members** app. Keep them 100% isolated:
      **new** provisioning profile for Biscuit's bundle ID. **Never** revoke,
      reset, or regenerate any existing certificate/profile (those are shared with
      INTO — see "Isolation" above). If Xcode offers to "Reset" or "Revoke", STOP.
-   - **Bundle Identifier**: `app.biscuit` (matches `appId` in
-     `capacitor.config.ts` and the App Store Connect record below).
+   - **Bundle Identifier**: should read `app.biscuit.staging` for a staging build
+     (or `app.biscuit` for production) — it matches `appId` in
+     `capacitor.config.ts` and the App Store Connect record below.
 
 4. **In App Store Connect** (appstoreconnect.apple.com → Apps → "+"), signed in
    as `vedat@vemax.io`:
    - First register a **new, explicit** App ID at developer.apple.com →
-     Identifiers (`app.biscuit`, team 72JBWD8T65). Not a wildcard.
-   - Then create a **brand-new app record** with that **same bundle ID**, name
-     "Biscuit", platform iOS, and its own unique SKU. Do **not** modify or reuse
-     INTO's existing records.
+     Identifiers — `app.biscuit.staging` for staging (or `app.biscuit` for
+     production), team 72JBWD8T65. Not a wildcard.
+   - Then create a **brand-new app record** with that **same bundle ID** — name
+     "Biscuit (Staging)" for staging — platform iOS, its own unique SKU. Do
+     **not** modify or reuse INTO's existing records. (A separate staging app is
+     exactly how INTO is set up.)
 
 ---
 
